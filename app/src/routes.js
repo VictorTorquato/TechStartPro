@@ -2,13 +2,12 @@ const express = require("express");
 
 const routes = express.Router();
 
-routes.get('/products', (request, response) => {
-    const body = request.body;
+routes.post('/product', (request, response) => {
+    const data = request.body;
 
-    return response.json({
-        nome: 'Mesa',
-        categorias: 'Móveis'
-    });
+    console.log(data);
+
+    return response.json();
 });
 
 module.exports = routes;
