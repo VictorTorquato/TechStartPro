@@ -8,7 +8,7 @@ const routes = express.Router();
 
 routes.get('/product', ProductController.index);
 routes.post('/product/:category', ProductController.createProduct);
-// routes.delete('/product/:id', ProductController.delete);
+routes.delete('/product/:id', ProductController.delete);
 
 routes.get('/category', CategoryController.index);
 routes.post('/category', CategoryController.create);

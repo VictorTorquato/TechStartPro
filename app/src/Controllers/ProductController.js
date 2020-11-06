@@ -1,24 +1,23 @@
+const knexfile = require('../../knexfile');
 const connection = require('../database/connection');
 
 module.exports = {
 
     async index(){
         
-        const product = await connection
+        const products = await connection
         .select([
-            "product.id", 
-            "product.name", 
-            "product.description",
-            "product.value",
-            "category.name as category1",
+            'product.id', 
+            'product.name', 
+            'product.description',
+            'product.value',
+            'category.name as category',
         ])
         .table('product')
         .innerJoin('product_category', 'product_category.product_id', 'product.id')
         .innerJoin('category', 'category.id', 'product_category.category_id')
 
-        console.log(product);
-
-        return(product);
+        return(products);
     },
 
     async create(name, description, value){
@@ -55,15 +54,30 @@ module.exports = {
             return(exist);
     },
 
+    async verifyIfExistById(id){
+        const exist = await connection('product')
+        .select()
+        .where('id', id)
+        .then(function(rows) {
+            if (rows.length===0) {
+                // no matching records found
+                return(0);
+            } else {
+                // return or throw - duplicate name found
+                return(1);
+            }
+        });
+        return(exist);
+    },
+
     async delete(id){
         try{
-            await connection('product').where('id', id).delete();
-
-            return('\nProduct delete successfull!');
+            await connection('product').where('id', id).delete('*');
         }
-        catch{
-            return('\nProduct not found.');
+        catch(error){
+            console.log(error);
         }
+        return;
     }
 
     

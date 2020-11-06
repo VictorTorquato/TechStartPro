@@ -24,17 +24,14 @@ async create( product_id, categoriesIdArray){
             break;
         }
     }
-    return;
 },
 
 async deleteProduct(ProductId){
     try{
         await connection('product_category').where('product_id', ProductId).delete('*');
-
-        return;
     }
-    catch{
-        return;
+    catch(error){
+        console.log(error);
     }
 },
 

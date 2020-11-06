@@ -1,3 +1,4 @@
+const { orWhereExists, whereExists } = require('../database/connection');
 const connection = require('../database/connection');
 
 module.exports = {
@@ -24,6 +25,25 @@ module.exports = {
 
         console.log('Categoria criada com sucesso!', id);
         return response.status(200).send();
+    },
+
+    async exist(array){
+        var exist = 1;
+        for (var i = 0; i < array.length || exist == 1; i++)
+        {
+            exist = await connection('category')
+            .select()
+            .where('id', array[i])
+            .then(function(rows) {
+                if (rows.length===0) {
+                    // no matching records found
+                    return(0);
+                } else {
+                    // return or throw - duplicate name found
+                }
+            });
+        };
+        return(exist);
     },
 
     async delete(request, response){
