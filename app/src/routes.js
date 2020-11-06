@@ -12,6 +12,7 @@ routes.delete('/product/:id', ProductController.delete);
 
 routes.get('/category', CategoryController.index);
 routes.post('/category', CategoryController.create);
+routes.post('/category/scv', CategoryController.createBySCV);
 routes.delete('/category/:id', CategoryController.delete);
 
 routes.get('/product_category', Product_CategoryController.index);

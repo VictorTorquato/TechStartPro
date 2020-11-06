@@ -8,7 +8,7 @@ module.exports = {
 
     async index(request, response){
 
-        const products = await ProductController.index();
+        const products = await ProductController.index(3);
 
         dataArray = new Array();
 

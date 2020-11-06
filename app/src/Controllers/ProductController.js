@@ -1,23 +1,69 @@
 const knexfile = require('../../knexfile');
 const connection = require('../database/connection');
+const { index } = require('./CategoryController');
 
 module.exports = {
 
-    async index(){
-        
-        const products = await connection
-        .select([
-            'product.id', 
-            'product.name', 
-            'product.description',
-            'product.value',
-            'category.name as category',
-        ])
-        .table('product')
-        .innerJoin('product_category', 'product_category.product_id', 'product.id')
-        .innerJoin('category', 'category.id', 'product_category.category_id')
+    // SortCommands:
+    // 1 - OrderBy product.id; 
+    // 2 - OrderBy product.name;
+    // 3 - OrderBy product.value;
 
+    async index(sortCommand){ 
+
+        var products;
+
+        switch(sortCommand){
+            case 1:
+                products = await connection
+                .select([
+                    'product.id', 
+                    'product.name', 
+                    'product.description',
+                    'product.value',
+                    'category.name as category',
+                ])
+                .orderBy('product.id')
+                .table('product')
+                .innerJoin('product_category', 'product_category.product_id', 'product.id')
+                .innerJoin('category', 'category.id', 'product_category.category_id')
+                break;
+            case 2:
+                products = await connection
+                .select([
+                    'product.id', 
+                    'product.name', 
+                    'product.description',
+                    'product.value',
+                    'category.name as category',
+                ])
+                .orderBy('product.name')
+                .table('product')
+                .innerJoin('product_category', 'product_category.product_id', 'product.id')
+                .innerJoin('category', 'category.id', 'product_category.category_id')
+                break;
+            case 3:
+                products = await connection
+                .select([
+                    'product.id', 
+                    'product.name', 
+                    'product.description',
+                    'product.value',
+                    'category.name as category',
+                ])
+                .orderBy('product.value')
+                .table('product')
+                .innerJoin('product_category', 'product_category.product_id', 'product.id')
+                .innerJoin('category', 'category.id', 'product_category.category_id')
+                break;
+            default:
+                    console.log('Error! Invalid sort command.');   
+        }
         return(products);
+    },
+
+    async indexByCategory(category){
+
     },
 
     async create(name, description, value){

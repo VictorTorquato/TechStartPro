@@ -1,6 +1,10 @@
 const { orWhereExists, whereExists } = require('../database/connection');
 const connection = require('../database/connection');
 
+const csv = require('csv-parser');
+const fs = require('fs');
+
+
 module.exports = {
 
     async index(request, response){
@@ -24,6 +28,38 @@ module.exports = {
         .first();
 
         console.log('Categoria criada com sucesso!', id);
+        return response.status(200).send();
+    },
+
+    async createBySCV(request, response){
+
+        const {file} = request.body;
+        const array = [];
+
+        fs.createReadStream(file)
+            .pipe(csv())
+            .on('data', (data) => array.push(data))
+            .on('end', async () => {
+                console.log('CSV file successfully processed');
+                console.log(array);
+                var name;
+                for (var i = 0; i < array.length; i++)
+                {
+                    name = array[i].nome;
+                    await connection('category').insert({
+                        name
+                    });
+        
+                    const id = await connection('category')
+                    .where('name', name)
+                    .select('id')
+                    .first();
+        
+                    console.log('Categoria criada com sucesso!', id);
+                }
+            });
+
+        
         return response.status(200).send();
     },
 
