@@ -57,7 +57,7 @@ module.exports = {
                 .innerJoin('category', 'category.id', 'product_category.category_id')
                 break;
             default:
-                    console.log('Error! Invalid sort command.');   
+                    console.log('\n     Error! Invalid sort command.');   
         }
         return(products);
     },
@@ -68,26 +68,21 @@ module.exports = {
 
     async create(name, description, value){
 
-        await connection('product').insert({
+        const [ id ] = await connection('product').insert({
             name,
             description,
             value
-        });
+        }).select('id');
 
-        const product = await connection('product')
-        .where('name', name)
-        .select('id')
-        .first()
-
-        return(product.id);
+        return(id);
     },
 
     async verifyIfExist(name, description, value){
             const exist = await connection('product')
             .select()
             .where('name', name)
-            .andWhere('description', description)
-            .andWhere('value', value)
+            .where('description', description)
+            .where('value', value)
             .then(function(rows) {
                 if (rows.length===0) {
                     // no matching records found

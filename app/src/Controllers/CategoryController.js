@@ -18,16 +18,11 @@ module.exports = {
     async create(request, response){
         const { name } = request.body;
 
-        await connection('category').insert({
+        const [id] = await connection('category').insert({
             name
         });
 
-        const id = await connection('category')
-        .where('name', name)
-        .select('id')
-        .first();
-
-        console.log('Categoria criada com sucesso!', id);
+        console.log('\n     Category create successful! ID:', id);
         return response.status(200).send();
     },
 
@@ -40,22 +35,16 @@ module.exports = {
             .pipe(csv())
             .on('data', (data) => array.push(data))
             .on('end', async () => {
-                console.log('CSV file successfully processed');
-                console.log(array);
                 var name;
+                var id;
                 for (var i = 0; i < array.length; i++)
                 {
                     name = array[i].nome;
-                    await connection('category').insert({
+                    [id] = await connection('category').insert({
                         name
-                    });
+                    }).select('id');
         
-                    const id = await connection('category')
-                    .where('name', name)
-                    .select('id')
-                    .first();
-        
-                    console.log('Categoria criada com sucesso!', id);
+                    console.log('\n     Category ', array[i].nome, 'create successful! ID:', id);
                 }
             });
 
@@ -87,7 +76,7 @@ module.exports = {
 
         await connection('category').where('id', id).delete();
 
-        console.log('Categoria deletada com sucesso!');
+        console.log('\n     Category delete successful!');
         return response.status(204).send();
     }
 
