@@ -1,5 +1,4 @@
 const connection = require('../database/connection');
-const { index } = require('./CategoryController');
 
 module.exports = {
 
@@ -20,7 +19,8 @@ async create( product_id, categoriesIdArray){
                 product_id,
                 category_id
             });
-        }catch{
+        }catch(error){
+            console.log(error.name + ":" + error.message);
             break;
         }
     }
@@ -28,10 +28,10 @@ async create( product_id, categoriesIdArray){
 
 async deleteProduct(ProductId){
     try{
-        await connection('product_category').where('product_id', ProductId).delete('*');
+        await connection('product_category').where('product_id', '=', ProductId).delete('*');
     }
     catch(error){
-        console.log(error);
+        console.log(error.name + ":" + error.message);
     }
 },
 

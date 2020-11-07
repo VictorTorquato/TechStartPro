@@ -1,6 +1,4 @@
-const knexfile = require('../../knexfile');
 const connection = require('../database/connection');
-const { index } = require('./CategoryController');
 
 module.exports = {
 
@@ -62,10 +60,6 @@ module.exports = {
         return(products);
     },
 
-    async indexByCategory(category){
-
-    },
-
     async create(name, description, value){
 
         const [ id ] = await connection('product').insert({
@@ -80,9 +74,9 @@ module.exports = {
     async verifyIfExist(name, description, value){
             const exist = await connection('product')
             .select()
-            .where('name', name)
-            .where('description', description)
-            .where('value', value)
+            .where('name', '=', name)
+            .where('description', '=', description)
+            .where('value', '=', value)
             .then(function(rows) {
                 if (rows.length===0) {
                     // no matching records found
@@ -98,7 +92,7 @@ module.exports = {
     async verifyIfExistById(id){
         const exist = await connection('product')
         .select()
-        .where('id', id)
+        .where('id', '=', id)
         .then(function(rows) {
             if (rows.length===0) {
                 // no matching records found
@@ -113,10 +107,24 @@ module.exports = {
 
     async delete(id){
         try{
-            await connection('product').where('id', id).delete('*');
+            await connection('product').where('id', '=', id).delete('*');
         }
         catch(error){
-            console.log(error);
+            console.log(error.name + ":" + error.message);
+        }
+        return;
+    },
+
+    async update(id, newName, newDescription, newValue){
+        try{
+            await connection('product').where('id', '=', id).update({
+                name: newName,
+                description: newDescription,
+                value: newValue
+            });
+        }
+        catch(error){
+            console.log(error.name + ":" + error.message);
         }
         return;
     }

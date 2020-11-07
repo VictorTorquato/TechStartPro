@@ -9,8 +9,10 @@ const routes = express.Router();
 routes.get('/product', ProductController.index);
 routes.post('/product/:category', ProductController.createProduct);
 routes.delete('/product/:id', ProductController.delete);
+routes.put('/product/:newCategories', ProductController.update);
 
 routes.get('/category', CategoryController.index);
+routes.get('/category/:categoryId', CategoryController.indexProducts);
 routes.post('/category', CategoryController.create);
 routes.post('/category/scv', CategoryController.createBySCV);
 routes.delete('/category/:id', CategoryController.delete);
