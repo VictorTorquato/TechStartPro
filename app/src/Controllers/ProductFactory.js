@@ -6,7 +6,8 @@ module.exports = {
 
     async index(request, response){
 
-        const products = await ProductController.index(3);
+        const { sortCommand } = request.params;
+        const products = await ProductController.index(sortCommand);
 
         var data = ('\nProducts: ' + '\n');
         var aux = '';

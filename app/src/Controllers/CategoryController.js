@@ -16,8 +16,7 @@ module.exports = {
         {
             data = data.substr(0,data.length)+"\n"+(category[i].id + ' - ' + category[i].name);
         }
-        console.log(data);
-        return response.status(200).send();
+        return response.status(200).send(data);
     },
 
     
@@ -39,35 +38,34 @@ module.exports = {
             });
 
         if(exist == 0)
-            {
-                console.log("\n     The inserted category doesn't exist!");
-                return response.status(400).send();
-            }
-            else{
-                categoryName = await connection('category')
-                .select('name')
-                .where('category.id', '=', categoryId);
+        {
+            console.log("\n     The inserted category doesn't exist!");
+            return response.status(400).send();
+        }
+        else{
+            categoryName = await connection('category')
+            .select('name')
+            .where('category.id', '=', categoryId);
 
-                const products = await connection.select([
-                    'product.id', 
-                    'product.name', 
-                    'product.description',
-                    'product.value'
-                ])
-                .orderBy('product.id')
-                .table('product')
-                .innerJoin('product_category', 'product_category.product_id', 'product.id')
-                .where('product_category.category_id', '=', categoryId);
+            const products = await connection.select([
+                'product.id', 
+                'product.name', 
+                'product.description',
+                'product.value'
+            ])
+            .orderBy('product.id')
+            .table('product')
+            .innerJoin('product_category', 'product_category.product_id', 'product.id')
+            .where('product_category.category_id', '=', categoryId);
                 
-                var data = ('\nProducts of the category: ' + categoryName[0].name + '\n');
-                for (var i = 0; i < products.length ; i++)
-                {
-                    data = data.substr(0,data.length)+"\n"+(products[i].id + ' - ' + products[i].name + ' R$' + products[i].value);
-                }
-
-                console.log('         ', data);
-                return response.status(200).send(data);
+            var data = ('\nProducts of the category: ' + categoryName[0].name + '\n');
+            for (var i = 0; i < products.length ; i++)
+            {
+                data = data.substr(0,data.length)+"\n"+(products[i].id + ' - ' + products[i].name + ' R$' + products[i].value);
             }
+
+            return response.status(200).send(data);
+        }
     },
 
     async create(request, response){
@@ -83,7 +81,7 @@ module.exports = {
 
     async createBySCV(request, response){
         
-        const {file} = request.body;
+        const {file} = request.params;
         const array = [];
 
         fs.createReadStream(file)

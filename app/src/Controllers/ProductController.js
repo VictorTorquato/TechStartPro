@@ -10,9 +10,9 @@ module.exports = {
     async index(sortCommand){ 
 
         var products;
-
+        
         switch(sortCommand){
-            case 1:
+            case '1':
                 products = await connection
                 .select([
                     'product.id', 
@@ -26,7 +26,7 @@ module.exports = {
                 .innerJoin('product_category', 'product_category.product_id', 'product.id')
                 .innerJoin('category', 'category.id', 'product_category.category_id')
                 break;
-            case 2:
+            case '2':
                 products = await connection
                 .select([
                     'product.id', 
@@ -40,7 +40,7 @@ module.exports = {
                 .innerJoin('product_category', 'product_category.product_id', 'product.id')
                 .innerJoin('category', 'category.id', 'product_category.category_id')
                 break;
-            case 3:
+            case '3':
                 products = await connection
                 .select([
                     'product.id', 
