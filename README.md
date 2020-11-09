@@ -31,3 +31,5 @@ Com isso, o projeto foi clonado para sua máquina e todas as dependências foram
 instaladas.
 Para iniciar a aplicação basta executar o comando:
 node src/index.js
+
+Para mais informações vide a documentação.
