@@ -39,8 +39,7 @@ module.exports = {
 
         if(exist == 0)
         {
-            console.log("\n     The inserted category doesn't exist!");
-            return response.status(400).send();
+            return response.status(400).send("\n     The inserted category doesn't exist!\n");
         }
         else{
             categoryName = await connection('category')
@@ -74,9 +73,7 @@ module.exports = {
         const [id] = await connection('category').insert({
             name
         });
-
-        console.log('\n     Category create successful! ID:', id);
-        return response.status(200).send();
+        return response.status(200).send('\n     Category create successful! ID:', id);
     },
 
     async createBySCV(request, response){
@@ -128,8 +125,7 @@ module.exports = {
 
         await connection('category').where('id', id).delete();
 
-        console.log('\n     Category delete successful!');
-        return response.status(204).send();
+        return response.status(204).send('\n     Category delete successful!');
     }
 
 };

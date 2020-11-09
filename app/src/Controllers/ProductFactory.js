@@ -1,6 +1,7 @@
 const ProductController = require('./ProductController');
 const CategoryController = require('./CategoryController');
 const Product_CategoryController = require('./Product_CategoryController');
+const { exist } = require('./CategoryController');
 
 module.exports = {
 
@@ -29,18 +30,15 @@ module.exports = {
             i--;
             data = data.substr(0,data.length)+'\n';
         }
-
-        console.log(data);
-
         return response.status(201).send(data);
     },
 
     async createProduct(request, response){
-        const { name, description, value} = request.body;
+
+        const { name, description, value } = request.body;
 
         if(!isNaN(value) == false){
-            console.log('\n     Error! The "value" field must be a number.')
-            return response.status(400).send();
+            return response.status(400).send('\n     Error! The "value" field must be a number.');
         }
         var exist = await ProductController.verifyIfExist(name, description, value);
 
@@ -51,37 +49,42 @@ module.exports = {
                 var array = category.split(",");
             } 
             catch(error){
-                console.log(error.name + ":" + error.message);
-                return response.status(400).send();
+                const string = (error.name + ":" + error.message);
+                return response.status(400).send(string);
             }
 
             const categoryExist = await CategoryController.exist(array);
 
             if(categoryExist == 0)
             {
-                console.log('\n     One of the categories entered does not exist!')
-                console.log('\n     Product not created.');
-                return response.status(400).send();
+                return response.status(400).send('\n     One of the categories entered does not exist!\n     Product not created.');
             }
             else{
                 try{
                     const product_id = await ProductController.create(name, description, value);
                     await Product_CategoryController.create(product_id, array);
-                    console.log('\n     Product create successful! ID: ', product_id);
-                    return response.status(201).send();
+                    return response.status(201).send('\n     Product create successful! ID: '+product_id);
                 }
                 catch{
-                    console.log('\n     Error! Typed category does not exist or does not follow the model: id1,id2,id3...')
-                    console.log('\n     Product not created.');
-                    return response.status(400).send();
+                    return response.status(400).send('\n     Error! Typed category does not exist or does not follow the model: id1,id2,id3...\n     Product not created.');
                 }
             }
         } else
         {
-            console.log('\n     Error! The product already exists.')
-            console.log('\n     Product not created.');
-            return response.status(400).send();
+            return response.status(400).send('\n     Error! The product already exists.\n     Product not created.');
         }
+    },
+
+    async exist(request, response){
+        const { id } = request.params;
+        ProductController.verifyIfExistById(id).then(promise => {
+            if (promise == '1'){
+                return response.status(200).send();
+            }
+            else {
+                return response.status(400).send();
+            }
+        });
     },
 
     async delete(request, response){
@@ -93,17 +96,16 @@ module.exports = {
             try{
                 await ProductController.delete(id);
                 await Product_CategoryController.deleteProduct(id);
-                console.log('\n     Product delete successfull!');
+                const message = '\n     Product delete successfull!';
+                return response.status(204).send(message);
             }
             catch(error){
-                console.log(error.name + ":" + error.message);
+                const erro = (error.name + ":" + error.message);
+                return response.status(400).send(erro);
             }
         }else{
-            console.log('\n     Product not found.');
-            return response.status(400).send();
+            return response.status(400).send('\n     Product not found.');
         }
-
-        return response.status(204).send();
     },
 
     async update(request, response){
@@ -111,8 +113,8 @@ module.exports = {
         const {id, newName, newDescription, newValue} = request.body;
 
         if(!isNaN(newValue) == false){
-            console.log('\n     Error! The "newValue" field must be a number.')
-            return response.status(400).send();
+            const erro = '\n     Error! The "newValue" field must be a number.';
+            return response.status(400).send(erro);
         }
 
         const exist = await ProductController.verifyIfExistById(id);
@@ -123,35 +125,30 @@ module.exports = {
                 var array = newCategories.split(",");
             } 
             catch(error){
-                console.log(error.name + ":" + error.message);
-                return response.status(400).send();
+                const erro = (error.name + ":" + error.message)
+                return response.status(400).send(erro);
             }
 
             const categoryExist = await CategoryController.exist(array);
 
             if(categoryExist == 0)
             {
-                console.log('\n     One of the categories entered does not exist!')
-                console.log('\n     Product not updated.');
-                return response.status(400).send();
+                const erro = '\n     One of the categories entered does not exist!\n     Product not updated.';
+                return response.status(400).send(erro);
             }
             else{
                 try{
                     await ProductController.update(id,newName,newDescription,newValue);
                     await Product_CategoryController.deleteProduct(id);
                     await Product_CategoryController.create(id, array);
-                    console.log('\n     Product updated successful!');
-                    return response.status(201).send();
+                    return response.status(201).send('\n     Product updated successful!');
                 }
                 catch{
-                    console.log('\n     Error! Typed category does not exist or does not follow the model: id1,id2,id3...')
-                    console.log('\n     Product not updated.');
-                    return response.status(400).send();
+                    return response.status(400).send('\n     Error! Typed category does not exist or does not follow the model: id1,id2,id3...\n     Product not updated.');
                 }
             }
         }else{
-            console.log('\n     Product not found.')
-            return response.status(400).send();
+            return response.status(400).send('\n     Product not found.');
         }
     }
 

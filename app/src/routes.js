@@ -7,6 +7,7 @@ const Product_CategoryController = require('./Controllers/Product_CategoryContro
 const routes = express.Router();
 
 routes.get('/product/:sortCommand', ProductController.index);
+routes.get('/product/exist/:id', ProductController.exist);
 routes.post('/product/:category', ProductController.createProduct);
 routes.delete('/product/:id', ProductController.delete);
 routes.put('/product/:newCategories', ProductController.update);
