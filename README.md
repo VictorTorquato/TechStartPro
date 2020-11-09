@@ -25,10 +25,13 @@ Após ter instalado, crie uma pasta onde vai ser armazenado o projeto e rode o t
 nessa pasta ( Windows 10: Shift+ClickDireito - “Abrir janela do PowerShell aqui”).
 No terminal, digite os seguintes comandos um de cada vez e dê “Enter”:
 
-1 - git clone https://github.com/VictorTorquato/TechStartPro
-2 - cd TechStartPro
-3 - cd app
-4 - npm install
+- git clone https://github.com/VictorTorquato/TechStartPro
+
+- cd TechStartPro
+
+- cd app
+
+- npm install
 
 Com isso, o projeto foi clonado para sua máquina e todas as dependências foram
 instaladas. Para iniciar a aplicação basta executar o comando:
