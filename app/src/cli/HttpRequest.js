@@ -119,7 +119,7 @@ module.exports = {
         xhr.onreadystatechange = processRequest;
 
         function processRequest(e) {
-            if (xhr.readyState == 4 && xhr.status == 204) {
+            if (xhr.readyState == 4 && xhr.status == 200) {
                 let response = xhr.responseText;
                 console.log(response);
             }

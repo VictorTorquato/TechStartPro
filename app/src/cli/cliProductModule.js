@@ -125,12 +125,15 @@ var productUpdate = [
         name: 'value',
         message: 'Insert the new product value:',
         validate: function (value) {
-            if(isNaN(value) == false){
-                return (true);
+            if (value.length) {
+                if(isNaN(value) == false){
+                    return (true);
+                }
+                else{
+                    return 'Error! The "value" field must be a number.';
+                }
             }
-            else{
-                return 'Error! The "value" field must be a number.';
-            }
+            return 'It cannot be empty. Please enter it correctly...';
         }
     },
 ];
@@ -281,6 +284,7 @@ module.exports = {
                                 console.clear();
                                 HttpRequest.updateProduct(id, option.name, option.description, option.value, option.categories);
                                 setTimeout(function() { 
+                                    console.log('\n');
                                     inquirer.prompt(productContinue)
                                     .then(answers => {
                                         const cli = require('./cliProductModule');

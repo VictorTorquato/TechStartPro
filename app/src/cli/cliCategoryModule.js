@@ -13,10 +13,13 @@ var categoryId = {
     type: 'input',
     message: 'Insert the category by id:',
     validate: function (value) {
-        if(isNaN(value) == false){
-                return true;
+        if (value.length) {
+            if(isNaN(value) == false){
+                return (true);
+            }
+            return 'Error! The "id" field must be a number.';
         }
-        return 'Error! The "value" field must be a number.';
+        return 'It cannot be empty. Please enter it correctly...';
     }
 };
 
@@ -65,6 +68,7 @@ module.exports = {
                             option = answers.id;
                             HttpRequest.listCategoryProducts(option);
                             setTimeout(function() { 
+                                console.log('\n');
                                 inquirer.prompt(categoryContinue)
                                 .then(answers => {
                                     const cli = require('./cliCategoryModule');
@@ -103,7 +107,7 @@ module.exports = {
                                 // Something else when wrong
                             }
                         });
-                    }, 1000);
+                    }, 1500);
                 break;
                 case 'Back':
                     const cli = require('./cli');

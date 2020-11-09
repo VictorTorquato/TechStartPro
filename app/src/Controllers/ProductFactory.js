@@ -97,7 +97,7 @@ module.exports = {
                 await ProductController.delete(id);
                 await Product_CategoryController.deleteProduct(id);
                 const message = '\n     Product delete successfull!';
-                return response.status(204).send(message);
+                return response.status(200).send(message);
             }
             catch(error){
                 const erro = (error.name + ":" + error.message);
